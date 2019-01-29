@@ -43,6 +43,11 @@ repositories {
 	maven { url "https://repo.spring.io/snapshot" }
 }
 
+task plant_jar(type: Copy) {
+    from 'build/libs/spring-boot-sample-web-ui-0.0.0.jar'
+    into 'jar/'
+}
+
 task print() {
     doLast{
         println "github push complete huhuhu"
