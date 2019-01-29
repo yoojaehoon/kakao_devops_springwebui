@@ -4,7 +4,6 @@
  * This is a general purpose Gradle build.
  * Learn how to create Gradle builds at https://guides.gradle.org/creating-new-gradle-builds/
  */
-
 buildscript {
 	ext {
 		springBootVersion = '1.5.20.BUILD-SNAPSHOT'
@@ -42,6 +41,12 @@ repositories {
 	maven { url "https://repo.spring.io/release" }
 	maven { url "https://repo.spring.io/milestone" }
 	maven { url "https://repo.spring.io/snapshot" }
+}
+
+task print() {
+    doLast{
+        println "github push complete"
+    }
 }
 
 dependencies {
