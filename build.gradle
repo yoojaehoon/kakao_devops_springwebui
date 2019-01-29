@@ -45,7 +45,7 @@ repositories {
 
 task plant_jar(type: Copy) {
     from 'build/libs/spring-boot-sample-web-ui-0.0.0.jar'
-    into 'jar/'
+    into 'app/src/'
 }
 
 task print() {
