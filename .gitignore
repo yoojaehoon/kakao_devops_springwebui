@@ -2,7 +2,8 @@
 .gradle
 /build/
 app/src/
-nginx/logs/
+nginx/logs/access.log
+nginx/logs/error.log
 !gradle/wrapper/gradle-wrapper.jar
 
 # Ignore Gradle build output directory
