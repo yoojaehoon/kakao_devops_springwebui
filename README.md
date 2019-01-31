@@ -4,7 +4,7 @@
 
 2가지 방법으로 구현했다. 다른 한가지는 아래에 적재 하도록 한다
 
-<color=green>\!이벤트를 감지하는 docker-gen으로 구현한 웹 서비스 컨테이너 [https://github.com/yoojaehoon/dcgen_kkp.git]</color>
+추가 방법: 이벤트를 감지하는 docker-gen으로 만든 웹 서비스 컨테이너 [https://github.com/yoojaehoon/dcgen_kkp.git]
 
 ### 스프링부트 프로젝트 생성
 
