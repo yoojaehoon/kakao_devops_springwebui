@@ -18,6 +18,7 @@ Task 실행 테스트를 위해 간단한 Task만 ```build.gradle```에 추가�
 저는 빌드후 print와 jar를 넣어주는 plant_jar를 추가했습니다.
 
 ```./gradlew build plang_jar``` 를 실행해 주세요
+
 ![build.gradle](./images/build.gradle.png)
 
 ### 도커 인스톨
