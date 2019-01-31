@@ -7,32 +7,54 @@
 추가 방법: 이벤트를 감지하는 docker-gen으로 만든 웹 서비스 컨테이너 [https://github.com/yoojaehoon/dcgen_kkp.git]
 
 ### Condition 설명
-•spring-boot-sample-web-ui
-  -> git에서 다운로드 받아 healthcheck API를 추가
-    -> /src/main/java/sample/web/ui/mvc/HcData.java 추가
-  -> Json 오브젝트 리턴
-    -> /src/main/java/sample/web/ui/mvc/MessageController.java 의 ResponseBody 데코레이터 추가로 기본 json 자료형 응답
-•build script는 gradle로 작성
-  -> build.gradle에 기술
-  -> task로 plant_jar를 실행하면 새로운 jar를 웹서비스의 src로 복제
-•어플리케이션들은 모두 독립적인 Container 로 구성
-  -> 독립구성 nginx , app
-•어플리케이션들의 Log 는 Host 에 file 로 적재
-  -> app의 로그를 /var/lib/docker/containers/"container_id/container_id.log" 파일로 적재
-  -> nginx는 Dockerfile에서 호스트의 nginx/logs/를 컨테이너 /var/log/nginx/로 마운트하여 파일로 저장
-  -> nginx는 Dockerfile에서 호스트의 nginx/conf.d를 컨테이너 /etc/nginx/conf.d/로 마운트하여 손쉽게 설정 적용이 가능 
-•Container scale in/out 가능해야 함
-  -> deploy.py의 start 메뉴의 app 서브옵션으로 스케일 가능
-  -> deploy.py의 stop 메뉴의 container 서브옵션으로 app 개수 축소 가능
-•웹서버는 Nginx 사용
-•웹서버는 Reverse proxy 80 port, Round robin 방식으로 설정
-  -> nginx의 reverse_proxy 구성을 하기위해 conf.d/app.conf에서 proxy_pass와 upstream host 연결
-  -> 기본 RoundRobin 동작됨
-•무중단 배포 동작을 구현 (배포 방식에 제한 없음)
-  -> blue-green 배포방식으로 구현
-  -> deploy.py deploy 커맨드 실행
-•실행스크립트 개발언어는 bash/python/go 선택하여 작성
-  -> python 구현
+
+spring-boot-sample-web-ui
+  git에서 다운로드 받아 healthcheck API를 추가
+    1./src/main/java/sample/web/ui/mvc/HcData.java 추가
+  Json 오브젝트 리턴
+    1./src/main/java/sample/web/ui/mvc/MessageController.java 의 ResponseBody 데코레이터 추가로 기본 json 자료형 응답
+    
+build script는 gradle로 작성
+
+  1. build.gradle에 기술
+  
+  1-1. task로 plant_jar를 실행하면 새로운 jar를 웹서비스의 src로 복제
+  
+어플리케이션들은 모두 독립적인 Container 로 구성
+
+  1.독립구성 nginx , app
+  
+어플리케이션들의 Log 는 Host 에 file 로 적재
+
+  1.app의 로그를 /var/lib/docker/containers/"container_id/container_id.log" 파일로 적재
+  
+  2.nginx는 Dockerfile에서 호스트의 nginx/logs/를 컨테이너 /var/log/nginx/로 마운트하여 파일로 저장
+  
+  3.nginx는 Dockerfile에서 호스트의 nginx/conf.d를 컨테이너 /etc/nginx/conf.d/로 마운트하여 손쉽게 설정 적용이 가능 
+  
+Container scale in/out 가능해야 함
+
+  1.deploy.py의 start 메뉴의 app 서브옵션으로 스케일 가능
+  
+  2.deploy.py의 stop 메뉴의 container 서브옵션으로 app 개수 축소 가능
+  
+웹서버는 Nginx 사용
+
+웹서버는 Reverse proxy 80 port, Round robin 방식으로 설정
+
+  1.nginx의 reverse_proxy 구성을 하기위해 conf.d/app.conf에서 proxy_pass와 upstream host 연결
+  
+  2.기본 RoundRobin 동작됨
+  
+무중단 배포 동작을 구현 (배포 방식에 제한 없음)
+
+  1.blue-green 배포방식으로 구현
+  
+  2.deploy.py deploy 커맨드 실행
+  
+실행스크립트 개발언어는 bash/python/go 선택하여 작성
+
+  1.python 구현
 
 ### 스프링부트 프로젝트 생성
 
