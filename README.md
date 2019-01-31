@@ -11,6 +11,90 @@
 springboot_webui를 clone 받아주세요.
 https://github.com/yoojaehoon/kakao_devops_springwebui.git
 
+Spring 코드 수정
+```
+/src/main/java/sample/web/ui/mvc/MessageController.java
++ import org.springframework.web.bind.annotation.ResponseBody;
++ @GetMapping("healthcheck")
++
++        public @ResponseBody HcData healthCheck(){
++
++                HcData hc = new HcData();
++
++                try {
++
++                        String hostname = System.getenv("HOSTNAME");
++
++                        hc.setId(hostname);
++
++                        hc.setContent("IamAlive");
++
++                } catch (Exception e) {
++
++                        e.printStackTrace();
++
++                        hc.setId("nullId");
++
++                        hc.setContent("nullContent");
++
++                }
++
++                return hc;
++
++        }
+```
+/src/main/java/sample/web/ui/mvc/HcData.java
+```
+package sample.web.ui.mvc;
+
+public class HcData {
+
+
+
+    String id;
+
+    String content;
+
+
+
+    public HcData() {
+
+    }
+
+
+
+    public String getId() {
+
+        return id;
+
+    }
+
+
+
+    public String getContent() {
+
+        return content;
+
+    }
+
+
+
+    public void setId(String id) {
+
+	this.id = id;
+
+    }
+
+    public void setContent(String content) {
+
+	this.content = content;
+
+    }
+
+}
+```
+
+
 빌드 테스트는 springboot-web-ui를 소스코드로 사용했습니다.
 빌드도구는 ```Gradle```을 사용합니다.  
 본인의 서버에서 Gradle을 다운로드 받으시고 (https://gradle.org/install/) 프로젝트를 생성 해주세요.
@@ -319,5 +403,10 @@ ID : 4a7295ba3d14 Name : kakaopay_devops_springwebui_app_2
 
 Deploy : True , Output : Finish
 ```
+
+#healthcheck API
+curl http://<host>/healthcheck
+
+![healthcheck](./images/healthcheck_restget.png)
 
 감사합니다.
