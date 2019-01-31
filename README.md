@@ -2,7 +2,7 @@
 
 본 문서는 도커로 웹서비스를 연동하는것이 주 목적입니다. 만약 도커로 웹서비스를 연동하는것만 테스트 하고 싶으신분께서는 ```jenkins```, ```slack```과정은 필수가 아니 생략해주셔도 작동 합니다.
 
-2가지 방법으로 구현했다. 다른 한가지는 아래에 적재 하도록 한다
+2가지 방법으로 구현했습니다. 다른 한가지는 아래에 적재 하였으나 별도의 메뉴얼은 작성하지 않았습니다.
 
 추가 방법: 이벤트를 감지하는 docker-gen으로 만든 웹 서비스 컨테이너 [https://github.com/yoojaehoon/dcgen_kkp.git]
 
@@ -319,3 +319,5 @@ ID : 4a7295ba3d14 Name : kakaopay_devops_springwebui_app_2
 
 Deploy : True , Output : Finish
 ```
+
+감사합니다.
