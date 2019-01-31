@@ -138,7 +138,6 @@ if __name__ == '__main__':
                 print ("At least 1 %s service is must running")
             else:
                 service_down_by_id(args.container)
-
             printData(get_running_apps())
 
     elif args.subcommand == "restart":
