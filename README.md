@@ -404,9 +404,10 @@ ID : 4a7295ba3d14 Name : kakaopay_devops_springwebui_app_2
 Deploy : True , Output : Finish
 ```
 
-#healthcheck API
+## healthcheck API
 curl http://<host>/healthcheck
 
-![healthcheck](./images/healthcheck_restget.png)
+![healthcheck]
+(./images/healthcheck_restget.png)
 
 감사합니다.
