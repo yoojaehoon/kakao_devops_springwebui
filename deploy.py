@@ -4,11 +4,31 @@
 import commands
 import time
 
+import sys
+import argparse
+
 APPNAME="app"
 NGINX="jh_nginx"
+
+def get_running_nginx():
+    cmd = "docker container ls --format '{{.ID}}\t{{.Names}}' | grep %s" %(NGINX)
+    ret = commands.getoutput(cmd)
+    if ret == "":
+        return "running nginx container is zero"
+    sp_ret =  ret.split('\n')
+    ret_dict = {}
+    for i in sp_ret:
+        r = i.split('\t')
+        if not ret_dict.has_key(r[0]):
+            ret_dict[r[0]]=r[1]
+
+    return ret_dict
+
 def get_running_apps():
     cmd = "docker container ls --format '{{.ID}}\t{{.Names}}' | grep %s" %(APPNAME)
     ret = commands.getoutput(cmd)
+    if ret == "":
+        return "running nginx container is zero"
     sp_ret =  ret.split('\n')
     ret_dict = {}
     for i in sp_ret:
@@ -64,12 +84,52 @@ def _blue_service_down(container_id):
 
 
 if __name__ == '__main__':
-    ret = get_running_apps()
-    for i in ret:
-        print "ID : %s Name : %s\n" %(i,ret[i])
-    deploy_val,output = blue_green_deploy(ret)
-    ret = get_running_apps()
-    for i in ret:
-        print "ID : %s Name : %s\n" %(i,ret[i])
+    title = "KAKAO_PAY_Devops docker manager"
 
-    print "Deploy : %s , Output : %s" %(deploy_val, output)
+    parser = argparse.ArgumentParser(description=title, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    subparsers = parser.add_subparsers(metavar='<subcommand>', dest='subcommand')
+
+    parser_start = subparsers.add_parser('start', help="Start the docker containers.")
+    parser_stop = subparsers.add_parser('stop', help="Stop the docker containers.")
+    parser_restart = subparsers.add_parser('restart', help="Restart the docker containers.")
+    parser_deploy = subparsers.add_parser('deploy', help="Deploy the docker containers.")
+    parser_status = subparsers.add_parser('status', help="Status the docker containers.")
+
+    args = parser.parse_args()
+    
+    if args.subcommand == "start":
+        cmd = "docker-compose up -d"
+        print commands.getoutput(cmd)
+
+    elif args.subcommand == "stop":
+        cmd = "docker-compose down"
+        print commands.getoutput(cmd)
+    elif args.subcommand == "restart":
+        cmd = "docker-compose down"
+        commands.getstatusoutput(cmd)
+        print "Restarting the containers %s , %s" %(APPNAME,NGINX)
+        time.sleep(5)
+        cmd = "docker-compose up -d"
+        commands.getstatusoutput(cmd)
+
+    elif args.subcommand == "deploy":
+        ret = get_running_apps()
+        for i in ret:
+            print "ID : %s Name : %s\n" %(i,ret[i])
+        deploy_val,output = blue_green_deploy(ret)
+        ret = get_running_apps()
+        for i in ret:
+            print "ID : %s Name : %s\n" %(i,ret[i])
+
+        print "Deploy : %s , Output : %s" %(deploy_val, output)
+    elif args.subcommand == "status":
+        import pprint
+
+        print "------NGINX Status------"
+        pprint.pprint(get_running_nginx())
+        print "------APP Status--------"
+        pprint.pprint(get_running_apps())
+    else:
+        print "unknown command"
+
+
