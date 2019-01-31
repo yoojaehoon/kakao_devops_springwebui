@@ -120,43 +120,160 @@ cd kakaopay_devops_springwebui
 ./gradlew build plant_jar
 ```
 
-container 모두 시작하기
-```python deploy.py start```
-container 재시작하기
-```python deploy.py restart```
-container 모두 중지하기
-```python deploy.py stop```
-container deploy 시작하기
-```python deploy.py deploy```
-container 상태 확인하기
-```python deploy.py status```
-
+명령어 목록
 ```
-[root@docker kakaopay_devops_springwebui]# python deploy.py start
+usage: deploy.py [-h] [-o {table,minimal}] <subcommand> ...
+
+KAKAO_PAY_Devops docker manager
+
+positional arguments:
+  <subcommand>
+    start               Start the docker containers.
+    stop                Stop the docker containers.
+    restart             Restart the docker containers.
+    deploy              Deploy the docker containers.
+    status              Status the docker containers.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -o {table,minimal}, --output {table,minimal}
+                        Output format. (default: table)
+```
+
+컨테이너 시작
+```
+[root@docker kakaopay_devops_springwebui]# ./deploy.py start
+
 Creating network "kakaopay_devops_springwebui_default" with the default driver
 Creating kakaopay_devops_springwebui_app_1 ... done
 Creating jh_nginx                          ... done
 
-[root@docker kakaopay_devops_springwebui]# python deploy.py stop
+
++--------------+----------+
+| Feild        | Value    |
++--------------+----------+
+| afe858f71fa0 | jh_nginx |
++--------------+----------+
++--------------+-----------------------------------+
+| Feild        | Value                             |
++--------------+-----------------------------------+
+| 1a90ecadf528 | kakaopay_devops_springwebui_app_1 |
++--------------+-----------------------------------+
+```
+
+컨테이너 개수 확장
+```
+[root@docker kakaopay_devops_springwebui]# ./deploy.py start --app 3
+
+Starting kakaopay_devops_springwebui_app_1 ... done
+Creating kakaopay_devops_springwebui_app_2 ... done
+Creating kakaopay_devops_springwebui_app_3 ... done
+jh_nginx is up-to-date
+
++--------------+----------+
+| Feild        | Value    |
++--------------+----------+
+| afe858f71fa0 | jh_nginx |
++--------------+----------+
++--------------+-----------------------------------+
+| Feild        | Value                             |
++--------------+-----------------------------------+
+| 6a1620407c07 | kakaopay_devops_springwebui_app_3 |
+| f4844aa050ef | kakaopay_devops_springwebui_app_2 |
+| 1a90ecadf528 | kakaopay_devops_springwebui_app_1 |
++--------------+-----------------------------------+
+```
+
+컨테이너 중지 명령
+```
+[root@docker kakaopay_devops_springwebui]# ./deploy.py stop
+
+Stopping kakaopay_devops_springwebui_app_2 ... done
+Stopping kakaopay_devops_springwebui_app_3 ... done
 Stopping jh_nginx                          ... done
 Stopping kakaopay_devops_springwebui_app_1 ... done
+Removing kakaopay_devops_springwebui_app_2 ... done
+Removing kakaopay_devops_springwebui_app_3 ... done
 Removing jh_nginx                          ... done
 Removing kakaopay_devops_springwebui_app_1 ... done
 Removing network kakaopay_devops_springwebui_default
-[root@docker kakaopay_devops_springwebui]# python deploy.py restart
-Restarting the containers app , jh_nginx
-[root@docker kakaopay_devops_springwebui]# python deploy.py status
-------NGINX Status------
-{'954554c49523': 'jh_nginx'}
-------APP Status--------
-{'deb21ee6dad6': 'kakaopay_devops_springwebui_app_1'}
+
+
+running nginx container is zero
+running nginx container is zero
 ```
 
-무중단 배포하기
-```python deploy.py deploy
+컨테이너 개별 중지
+```
+[root@docker kakaopay_devops_springwebui]# ./deploy.py status
+------NGINX Status------
++--------------+----------+
+| Feild        | Value    |
++--------------+----------+
+| fd14ab4b536a | jh_nginx |
++--------------+----------+
+------APP Status--------
++--------------+-----------------------------------+
+| Feild        | Value                             |
++--------------+-----------------------------------+
+| 69b3c326512c | kakaopay_devops_springwebui_app_2 |
+| eb11a2317f82 | kakaopay_devops_springwebui_app_1 |
++--------------+-----------------------------------+
+[root@docker kakaopay_devops_springwebui]# ./deploy.py stop --container kakaopay_devops_springwebui_app_2
+STX---Docker service's down------
 
-[root@docker kakaopay_devops_springwebui]# python deploy.py deploy
-ID : deb21ee6dad6 Name : kakaopay_devops_springwebui_app_1
+docker container stop kakaopay_devops_springwebui_app_2
+docker container rm kakaopay_devops_springwebui_app_2
+------Docker service's up---ETX
+
++--------------+-----------------------------------+
+| Feild        | Value                             |
++--------------+-----------------------------------+
+| eb11a2317f82 | kakaopay_devops_springwebui_app_1 |
++--------------+-----------------------------------+
+
+[root@docker kakaopay_devops_springwebui]# ./deploy.py stop --container kakaopay_devops_springwebui_app_1
+At least 1 app service is must running
++--------------+-----------------------------------+
+| Feild        | Value                             |
++--------------+-----------------------------------+
+| eb11a2317f82 | kakaopay_devops_springwebui_app_1 |
++--------------+-----------------------------------+
+
+```
+
+컨테이너 모두 재시작
+```
+[root@docker kakaopay_devops_springwebui]# ./deploy.py restart
+BEFORE
++--------------+----------+
+| Feild        | Value    |
++--------------+----------+
+| fd14ab4b536a | jh_nginx |
++--------------+----------+
++--------------+-----------------------------------+
+| Feild        | Value                             |
++--------------+-----------------------------------+
+| eb11a2317f82 | kakaopay_devops_springwebui_app_1 |
++--------------+-----------------------------------+
+Restarting the containers app , jh_nginx
+AFTER
++--------------+----------+
+| Feild        | Value    |
++--------------+----------+
+| ae28154d6896 | jh_nginx |
++--------------+----------+
++--------------+-----------------------------------+
+| Feild        | Value                             |
++--------------+-----------------------------------+
+| 535b87000e62 | kakaopay_devops_springwebui_app_1 |
++--------------+-----------------------------------+
+```
+
+컨테이너 디플로이
+```
+[root@docker kakaopay_devops_springwebui]# ./deploy.py deploy
+ID : 535b87000e62 Name : kakaopay_devops_springwebui_app_1
 
 STX---Docker pull the Image------
 
@@ -175,11 +292,11 @@ Starting jh_nginx                          ... done
 
 STX---Docker service's down------
 
-docker container stop deb21ee6dad6
-docker container rm deb21ee6dad6
+docker container stop 535b87000e62
+docker container rm 535b87000e62
 ------Docker service's up---ETX
 
-ID : 766141d54296 Name : kakaopay_devops_springwebui_app_2
+ID : 4a7295ba3d14 Name : kakaopay_devops_springwebui_app_2
 
 Deploy : True , Output : Finish
 ```
