@@ -56,6 +56,7 @@ docker run -d -v jenkins_home:/var/jenkins_home -p 8080:8080 -p 50000:50000 jenk
 jenkins의 볼륨을 로컬과 연결해야 데이터가 사라지지 않으니 -v jenkins_home:/var/jenkins_home은 맞춰주도록 하자
 
 ![jenkins_1](./images/jenkins_1.png)
+
 패스워드는 docker 안에 들어있다.
 ```docker exec -i -t jenkins /bin/bash
 cat /var/jenkins_home/secrets/initialAdminPassword
@@ -63,53 +64,66 @@ cat /var/jenkins_home/secrets/initialAdminPassword
 콘솔에서 한번 패스워드를 넣어주고 설정하게 되면 파일은 사라지므로 일부러 삭제하지 않아도 된다
 
 ![jenkins_2](./images/jenkins_2.png)
+
 필자는 install suggested plugins를 선택했다. git 플러그인이 포함되서 따로 수동설치 안해도 된다.
 
 ![jenkins_3](./images/jenkins_3.png)
+
 FreeStyle Project를 선택하고 프로젝트이름 "springboot_project (마음대로 지정해줘도 된다)"를 넣어준다
 
 ![jenkins_4](./images/jenkins_4.png)
+
 Items 설정화면에서 ```소스 코드 관리``` 메뉴의 Repository URL에 git 저장소를 등록해준다
 아래 Credential 항목에 유저를 등록해준다. github에서 사용하는 계정과 패스워드를 넣어준다
 
 branch는 관리할 브랜치선택을 하는건데 master로 선택했다. 브랜치를 선택한것에 따라 빌드가 유발된다
 빌드 유발은 체크박스 ```GitHub hook trigger for GITScm polling``` 를 선택한다
+
 ![jenkins_5](./images/jenkins_5.png)
 
 ![jenkins_6](./images/jenkins_6.png)
+
 Add build step에서 빌드하는 스크립트를 넣을수 있도록 선택해준다. git에서는 gradle build가 필요 없다고 생각했다. gradle clean를 넣는다
 
 ## Github과 jenkin 연동하기
 빌드할때 성공했는지 실패했는지 메시지 받을수 있도록 을 연결한다. 옛날에는 Integrations & services에서 지원되었는데 어느순간 Webhooks로 옮겨갔다
 
 ![jenkins_7](./images/jenkins_7.png)
+
 만들어져있는 jenkins url 웹훅 주소를 넣으면 이제부터 git이 push할때마다 빌드를 알아서 하게 될것이다
 
 
 ![jenkins_8](./images/jenkins_8.png)
+
 push되면 빌드 상태가 되는것이 보일것이다
 
 ## Slack 과 jenkins 연결하기
 빌드될때 이벤트 수신하기위해 플러그인을 연동한다
 
 ![slack_1](./images/slack_1.png)
+
 채널을 만들어준다
 
 ![slack_2](./images/slack_2.png)
+
 Slack에서 jenkins 플러그인을 연결
 
 ![slack_3](./images/slack_3.png)
+
 메뉴얼에서 제공하는 ```url```과 ```토큰```을 jenkins에 입력한다
 
 ![slack_4](./images/slack_4.png)
+
 jenkins에서 "jenkins 관리" -> "플러그인 관리" -> "설치 가능" -> "slack notification" 를 검색한다
 기본 설치되는 플러그인이 아니므로 인스톨하고 다시 "jenkins 관리" -> "시스템 설정" 으로 이동해서 아까 받은 ```url```과 ```토큰```을 넣는다
 
 ![slack_5](./images/slack_5.png)
 ![slack_6](./images/slack_6.png)
+
 이제 jenkins의 프로젝트에서 빌드후 조치 항목에 slack notification 이 추가되어 있을것이다
 
 ![slack_7](./images/slack_7.png)
+
 빌드 될때마다 메시지를 slack으로 연락받아 확인이 가능하다
 
 ## Docker로 nginx와 springboot 연동하여 무중단 배포하기
