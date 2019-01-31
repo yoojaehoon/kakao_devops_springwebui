@@ -14,7 +14,7 @@ Task 실행 테스트를 위해 간단한 Task만 ```build.gradle```에 추가�
 저는 빌드후 print와 jar를 넣어주는 plant_jar를 추가했습니다.
 
 ```./gradlew build plang_jar``` 를 실행해 주세요
-![build.gradle](./images/buid.gradle.png)
+![build.gradle](./images/build.gradle.png)
 
 ### 도커 인스톨
 컨테이너 기반의 웹서버를 돌리기 위해 docker 엔진을 설치합니다.
