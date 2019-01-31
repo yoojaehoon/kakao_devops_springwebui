@@ -4,8 +4,8 @@
 import commands
 import time
 
-import sys
 import argparse
+from output import printData
 
 APPNAME="app"
 NGINX="jh_nginx"
@@ -82,6 +82,19 @@ def _blue_service_down(container_id):
     ret = commands.getoutput(cmd)
     print "------Docker service's up---ETX\n"
 
+def service_down_by_id(container_id):
+    print "STX---Docker service's down------\n"
+    cmd = "docker container stop %s" %(container_id)
+    print cmd
+    commands.getoutput(cmd)
+    cmd = "docker container rm %s" %(container_id)
+    print cmd
+    commands.getoutput(cmd)
+    cmd = "docker exec -i -t %s /etc/init.d/nginx reload" %(NGINX)
+    ret = commands.getoutput(cmd)
+    print "------Docker service's up---ETX\n"
+
+
 
 if __name__ == '__main__':
     title = "KAKAO_PAY_Devops docker manager"
@@ -89,28 +102,58 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=title, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     subparsers = parser.add_subparsers(metavar='<subcommand>', dest='subcommand')
 
+    parser.add_argument('-o', '--output', help='Output format.', choices=['table','minimal'], default='table')
+
     parser_start = subparsers.add_parser('start', help="Start the docker containers.")
+    parser_start.add_argument("--app", type=int,required=False)
     parser_stop = subparsers.add_parser('stop', help="Stop the docker containers.")
+    parser_stop.add_argument("--container", type=str,required=False)
+    
     parser_restart = subparsers.add_parser('restart', help="Restart the docker containers.")
     parser_deploy = subparsers.add_parser('deploy', help="Deploy the docker containers.")
     parser_status = subparsers.add_parser('status', help="Status the docker containers.")
 
     args = parser.parse_args()
-    
+
     if args.subcommand == "start":
         cmd = "docker-compose up -d"
-        print commands.getoutput(cmd)
+        if args.app > 0 and args.app < 10:
+            cmd = "docker-compose up -d --scale %s=%d" %(APPNAME,args.app)
+
+        result= commands.getoutput(cmd)
+        printData(result)
+        printData(get_running_nginx())
+        printData(get_running_apps())
 
     elif args.subcommand == "stop":
-        cmd = "docker-compose down"
-        print commands.getoutput(cmd)
+        if args.container == None:
+            cmd = "docker-compose down"
+            result= commands.getoutput(cmd)
+            printData(result)
+            printData(get_running_nginx())
+            printData(get_running_apps())
+        else:
+            ret = get_running_apps()
+            if len(ret) == 1:
+                print ("At least 1 %s service is must running")
+            else:
+                service_down_by_id(args.container)
+
+            printData(get_running_apps())
+
     elif args.subcommand == "restart":
+        print "BEFORE"
+        printData(get_running_nginx())
+        printData(get_running_apps())
         cmd = "docker-compose down"
         commands.getstatusoutput(cmd)
         print "Restarting the containers %s , %s" %(APPNAME,NGINX)
         time.sleep(5)
         cmd = "docker-compose up -d"
         commands.getstatusoutput(cmd)
+        print "AFTER"
+        printData(get_running_nginx())
+        printData(get_running_apps())
 
     elif args.subcommand == "deploy":
         ret = get_running_apps()
@@ -123,13 +166,11 @@ if __name__ == '__main__':
 
         print "Deploy : %s , Output : %s" %(deploy_val, output)
     elif args.subcommand == "status":
-        import pprint
 
         print "------NGINX Status------"
-        pprint.pprint(get_running_nginx())
+        printData(get_running_nginx())
         print "------APP Status--------"
-        pprint.pprint(get_running_apps())
+        printData(get_running_apps())
     else:
         print "unknown command"
-
 
