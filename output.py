@@ -9,13 +9,22 @@ def printData(data, output_format='table', **kwargs):
     else:
         header = None
 
+    if kwargs.has_key('minimal_key'):
+        minimal_key = kwargs['minimal_key']
+
     if output_format == 'table':
         printTable(data, header)
+
+    elif output_format == 'minimal' and minimal_key:
+        printMinimal(data,minimal_key)
 
     else:
         print 
         print data
         print 
+
+def printMinimal(data, minimal_key):
+    print data[minimal_key]
 
 def printTable(data, header):
     if type(data) == type(dict()):

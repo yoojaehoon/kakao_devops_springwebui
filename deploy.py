@@ -20,7 +20,9 @@ def get_running_nginx():
     for i in sp_ret:
         r = i.split('\t')
         if not ret_dict.has_key(r[0]):
-            ret_dict[r[0]]=r[1]
+            ret_dict['id']=r[0]
+            ret_dict['name']=r[1]
+            #ret_dict[r[0]]=r[1]
 
     return ret_dict
 
@@ -106,6 +108,7 @@ if __name__ == '__main__':
 
     parser_start = subparsers.add_parser('start', help="Start the docker containers.")
     parser_start.add_argument("--app", type=int,required=False)
+    parser_start.add_argument("-o","--output", choices=['table','minimal'], default='table')
     parser_stop = subparsers.add_parser('stop', help="Stop the docker containers.")
     parser_stop.add_argument("--container", type=str,required=False)
     
@@ -122,7 +125,7 @@ if __name__ == '__main__':
 
         result= commands.getoutput(cmd)
         printData(result)
-        printData(get_running_nginx())
+        printData(get_running_nginx(),args.output,minimal_key='id')
         printData(get_running_apps())
 
     elif args.subcommand == "stop":
@@ -135,7 +138,7 @@ if __name__ == '__main__':
         else:
             ret = get_running_apps()
             if len(ret) == 1:
-                print ("At least 1 %s service is must running")
+                print ("At least 1 %s service is must running" %(APPNAME))
             else:
                 service_down_by_id(args.container)
             printData(get_running_apps())
