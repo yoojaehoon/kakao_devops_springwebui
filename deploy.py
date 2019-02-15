@@ -20,9 +20,9 @@ def get_running_nginx():
     for i in sp_ret:
         r = i.split('\t')
         if not ret_dict.has_key(r[0]):
-            ret_dict['id']=r[0]
-            ret_dict['name']=r[1]
-            #ret_dict[r[0]]=r[1]
+            #ret_dict['id']=r[0]
+            #ret_dict['name']=r[1]
+            ret_dict[r[0]]=r[1]
 
     return ret_dict
 
@@ -170,7 +170,7 @@ if __name__ == '__main__':
     elif args.subcommand == "status":
 
         print "------NGINX Status------"
-        printData(get_running_nginx())
+        printData(get_running_nginx(),output_format='table',minimal_key='id')
         print "------APP Status--------"
         printData(get_running_apps())
     else:
