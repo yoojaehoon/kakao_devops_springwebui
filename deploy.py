@@ -99,7 +99,7 @@ def service_down_by_id(container_id):
 
 
 if __name__ == '__main__':
-    title = "KAKAO_PAY_Devops docker manager"
+    title = "Devops docker manager"
 
     parser = argparse.ArgumentParser(description=title, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     subparsers = parser.add_subparsers(metavar='<subcommand>', dest='subcommand')
