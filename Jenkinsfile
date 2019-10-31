@@ -2,5 +2,5 @@
 
 node {
   //sendNotifications 'STARTED'
-  deploy("TEST Notify from groovy")
+  deploy()
 }
