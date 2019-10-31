@@ -1,0 +1,21 @@
+---
+general:
+  project_name: nonstop_devops_springwebui
+  notify_ids:
+    - qWB41GpyfiZQ5y8n7B8uBrdtaL09ht8cqAEamljmKCV
+build:
+  include_docker_build: false
+  test_script: "false"
+  script: "./gradlew build"
+  update_latest: true
+
+deploy:
+  type: online
+  dns: nonstop-link.linecorp.com
+  namespace: devops
+  log_dir: "/home1/irteamsu/logs"
+  phase_map:
+    alpha: master
+    beta: false
+    rc: false
+    production: false
