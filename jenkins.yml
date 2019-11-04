@@ -6,7 +6,7 @@ general:
 build:
   include_docker_build: false
   test_script: "false"
-  script: "./gradlew build"
+  script: "./gradlew build;./gradlew plant_jar"
   docker_build_options: " --build-arg JAR_FILE=build/libs/spring-boot-sample-web-ui-0.0.0.jar"
   dockerfile_path: "app/"
   update_latest: true
