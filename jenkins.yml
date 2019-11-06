@@ -1,6 +1,6 @@
 ---
 general:
-  project_name: nonstop_devops_springwebui
+  project_name: nonstop-devops-springwebui
   notify_ids:
     - qWB41GpyfiZQ5y8n7B8uBrdtaL09ht8cqAEamljmKCV
 build:
